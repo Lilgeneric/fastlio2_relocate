@@ -1,0 +1,20 @@
+<launch>
+    <!-- 节点名称 -->
+    <node pkg="pointcloud_downsample"  
+          type="pcd_downsample_node"   
+          name="pcd_downsampler"      
+          output="screen">             
+
+        <!-- 输入PCD文件路径 -->
+        <param name="input_pcd" value="/home/generic/PCD/xtellar_mid360.pcd" />
+
+        <!-- 输出PCD文件路径 -->
+        <param name="output_pcd" value="$(find fast_lio_localization)/PCD/xtellar_mid360_downsampled.pcd" />
+
+        <!-- 体素大小（单位：米，根据需求调整） -->
+        <param name="leaf_size_x" value="2.0" />
+        <param name="leaf_size_y" value="2.0" />
+        <param name="leaf_size_z" value="2.0" />
+
+    </node>
+</launch>

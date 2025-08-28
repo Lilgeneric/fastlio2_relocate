@@ -1,0 +1,74 @@
+<launch>
+    <!-- 1. 声明算法选择参数（0=fastlio_localization  1=fastlio2） -->
+    <arg name="algorithm" default="1" />
+
+    <!-- 机器人仿真模型及gazebo -->
+    <include file="$(find smartcar_description)/launch/xacro/smartcar_base.launch"/>
+
+    <!-- move_base 节点，集成导航功能 -->
+    <node name="move_base" pkg="move_base" type="move_base" output="screen">
+        <remap from="/scan" to="/cloud_registered"/>
+        <rosparam file="$(find bringup)/param/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+        <rosparam file="$(find bringup)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find bringup)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find bringup)/param/global_costmap_params.yaml" command="load" /> 
+        <rosparam file="$(find bringup)/param/teb_local_planner_params.yaml" command="load" />
+        <rosparam file="$(find bringup)/param/move_base_params.yaml" command="load" />
+        <rosparam file="$(find bringup)/param/global_planner_params.yaml" command="load" />
+        <rosparam file="$(find bringup)/param/costmap_convert_params.yaml" command="load" />
+        <param name="base_global_planner" value="navfn/NavfnROS"/>
+        <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
+        <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+        <remap from="/move_base/TebLocalPlannerROS/base_state" to="base_state"/>
+    </node>
+
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" output="screen">
+        <!-- 输入输出话题重映射 -->
+        <remap from="cloud_in" to="/cloud_registered"/>
+        <remap from="scan" to="/move_base/local_costmap/costmap"/>
+
+        <!-- 核心参数配置 -->
+        <rosparam command="load">
+            target_frame: laser_front_link
+            transform_tolerance: 0.01
+
+            min_height: -0.4
+            max_height: 1.0
+
+            angle_min: -3.1415926
+            angle_max: 3.1415926
+            angle_increment: 0.003
+
+            range_min: 0.2
+            range_max: 100.0
+
+            use_inf: true
+            inf_epsilon: 1.0
+
+            concurrency_level: 1
+
+            scan_time: 0.1
+        </rosparam>
+    </node>
+
+    <!-- 全局地图发布 -->
+    <include file = "$(find nav)/launch/map_server.launch"/>
+
+    <!-- 选项1：fast_lio2定位算法 -->
+    <include if="$(arg algorithm)" file = "$(find fast_lio)/launch/mapping_mid360.launch">
+        <arg name="pcd_save_en" value="false"/>
+        <arg name="odom_topic" value="/odom" />
+    </include>
+
+    <!-- 选项0：fast_lio_localization定位算法 -->
+    <include unless="$(arg algorithm)" file="$(find fast_lio_localization)/launch/localization_MID360.launch">
+        <arg name="map" value="$(find fast_lio_localization)/PCD/zsq_downsampled.pcd"/>
+        <arg name="odom_topic" value="/odom" />
+    </include>
+    
+    <!-- tf发布，保证tf树只有唯一根节点 -->
+    <node name="map2odom" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 /map /odom"/>
+
+    <!-- 加载RVIZ及配置文件 -->
+    <node pkg="rviz" type="rviz" name="nav_rviz" args="-d $(find nav)/rviz_cfg/nav_ackman.rviz" />
+</launch>

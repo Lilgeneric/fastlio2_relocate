@@ -1,0 +1,27 @@
+<launch>
+    <arg name="speed" default="0.5" />
+    <arg name="turn" default="0.2" />
+    <arg name="car_model_rviz" default="true" />
+
+    <param name="robot_description" command="$(find xacro)/xacro $(find car_model)/urdf/car.urdf.xacro" />
+    <!-- <node name="odom2basefootprint" pkg="tf2_ros" type="static_transform_publisher" args="0.08 0 0.1 0 0 0 /odom /base_footprint"/> -->
+    <node pkg="joint_state_publisher" name="joint_state_publisher" type="joint_state_publisher" />
+    <node pkg="robot_state_publisher" name="robot_state_publisher" type="robot_state_publisher" />
+
+    <param name="/rosconsole/config_file" value="$(find nav)/config/rosconsole.config" />
+    
+    <!-- <node name="arbotix" pkg="arbotix_python" type="arbotix_driver" output="screen">
+        <rosparam file="$(find car_model)/config/arbotix_car.yaml" command="load" />
+        <param name="sim" value="true" />
+    </node> -->
+
+    <node name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py">
+        <param name="speed" value="$(arg speed)" />
+        <param name="turn" value="$(arg turn)" />
+    </node>
+
+    <group if="$(arg car_model_rviz)">
+        <node launch-prefix="nice" pkg="rviz" type="rviz" name="nav" args="-d $(find car_model)/rviz/show_description.rviz" />
+    </group>
+</launch>
+

@@ -1,0 +1,13 @@
+<launch>
+  <node pkg="pcd2pgm" type="pcd2pgm_xyz" name="pcd2pgm_xyz" output="screen">
+    <param name="file_directory" value="/home/generic/PCD/" />
+    <param name="file_name" value="xtellar" />
+    <param name="map_resolution" type="double" value="0.05" />
+    <param name="map_topic_name" type="string" value="map" />
+    <param name="projection_plane" type="string" value="xy" />
+        
+    <!-- 新增半径滤波参数 -->
+    <param name="filter_radius" type="double" value="0.1" />  <!-- 滤波半径(m) -->
+    <param name="min_neighbors" type="int" value="3" />       <!-- 最小邻居数 -->
+  </node>
+</launch>

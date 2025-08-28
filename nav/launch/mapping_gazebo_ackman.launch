@@ -1,0 +1,18 @@
+<launch>
+    <include file="$(find car_model)/launch/car_gazebo.launch">
+        <arg name="car_model_rviz" value="false" />
+    </include>
+    <include file = "$(find fast_lio)/launch/mapping_velodyne.launch">
+        <arg name="pcd_final_map_name" value="yyyyyyyyyyyyyyyyyyyyy.pcd" />
+        <arg name="pcd_save_en" value="true" />
+    </include>
+    <include file = "$(find route_planning)/launch/move_base.launch"/>
+    <include file = "$(find nav)/launch/map_server.launch"/>
+
+    <node name="odom2map" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 /odom /map"/>
+    <!-- <node name="camera_init2odom" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 /camera_init /map"/>
+    <node name="odom2map" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 /base_footprint /mapped"/> -->
+
+    <node pkg="rviz" type="rviz" name="nav" args="-d $(find nav)/rviz_cfg/nav.rviz" />
+
+</launch>

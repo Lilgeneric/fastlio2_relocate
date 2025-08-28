@@ -1,0 +1,130 @@
+<robot name="my_sensors" xmlns:xacro="http://wiki.ros.org/xacro">
+    <gazebo reference="${name}">
+      <xacro:if value="${gpu}">
+        <sensor type="gpu_ray" name="${name}-VLP16">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>false</visualize>
+          <update_rate>${hz}</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>${samples}</samples>
+                <resolution>1</resolution>
+                <min_angle>${min_angle}</min_angle>
+                <max_angle>${max_angle}</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>${lasers}</samples>
+                <resolution>1</resolution>
+                <min_angle>-${15.0*M_PI/180.0}</min_angle>
+                <max_angle> ${15.0*M_PI/180.0}</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>${collision_range}</min>
+              <max>${max_range+1}</max>
+              <resolution>0.001</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </ray>
+          <plugin name="gazebo_ros_laser_controller" filename="/home/generic/fastlio2_relocate/devel/lib/libgazebo_ros_velodyne_gpu_laser.so">
+            <topicName>${topic}</topicName>
+            <frameName>${name}</frameName>
+            <min_range>${min_range}</min_range>
+            <max_range>${max_range}</max_range>
+            <gaussianNoise>${noise}</gaussianNoise>
+          </plugin>
+        </sensor>
+      </xacro:if>
+      <xacro:unless value="${gpu}">
+        <sensor type="ray" name="${name}-VLP16">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>true</visualize>
+          <update_rate>${hz}</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>${samples}</samples>
+                <resolution>1</resolution>
+                <min_angle>${min_angle}</min_angle>
+                <max_angle>${max_angle}</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>${lasers}</samples>
+                <resolution>1</resolution>
+                <min_angle>-${15.0*M_PI/180.0}</min_angle>
+                <max_angle> ${15.0*M_PI/180.0}</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>${collision_range}</min>
+              <max>${max_range+1}</max>
+              <resolution>0.001</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </ray>
+          <plugin name="gazebo_ros_laser_controller" filename="/home/generic/fastlio2_relocate/devel/lib/libgazebo_ros_velodyne_laser.so">
+            <topicName>${topic}</topicName>
+            <frameName>${name}</frameName>
+            <min_range>${min_range}</min_range>
+            <max_range>${max_range}</max_range>
+            <gaussianNoise>${noise}</gaussianNoise>
+          </plugin>
+        </sensor>
+      </xacro:unless>
+    </gazebo>
+</robot>
+
+<!-- <robot name="my_sensors" xmlns:xacro="http://wiki.ros.org/xacro">
+  <gazebo reference="mid-360">
+     <sensor type="ray" name="laser_livox">
+        <pose>0 0 0.0 0 0 0</pose>
+        <visualize>true</visualize>
+        <always_on>True</always_on>
+        <update_rate>10</update_rate>
+        <plugin name="gazebo_ros_laser_controller" filename="liblivox_laser_simulation.so">
+			  <ray>
+			  <scan>
+				  <horizontal>
+				    <samples>100</samples>
+				    <resolution>1</resolution>
+				    <min_angle>-3.1415926535897931</min_angle>
+            <max_angle>3.1415926535897931</max_angle>
+				  </horizontal>
+				  <vertical>
+				    <samples>50</samples>
+				    <resolution>1</resolution>
+				    <min_angle>-3.1415926535897931</min_angle>
+            <max_angle>3.1415926535897931</max_angle>
+				  </vertical>
+			  </scan>
+			  <range>
+				  <min>0.1</min>
+				  <max>40</max>
+				  <resolution>1</resolution>
+			  </range>
+			  <noise>
+				  <type>gaussian</type>
+				  <mean>0.0</mean>
+				  <stddev>0.0</stddev>
+			  </noise>
+			  </ray>
+          <visualize>True</visualize>
+		      <samples>20000</samples>
+		      <downsample>1</downsample>
+		      <csv_file_name>mid360-real-centr.csv</csv_file_name>
+          <publish_pointcloud_type>4</publish_pointcloud_type>
+		      <ros_topic>/livox/lidar</ros_topic>
+          <frameName>mid-360</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+</robot> -->

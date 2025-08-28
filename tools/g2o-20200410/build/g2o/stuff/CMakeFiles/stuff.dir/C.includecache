@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/generic/point_lio_Ackermann/src/dependencies/g2o-20200410/g2o/stuff/os_specific.c
+os_specific.h
+/home/generic/point_lio_Ackermann/src/dependencies/g2o-20200410/g2o/stuff/os_specific.h
+
+/home/generic/point_lio_Ackermann/src/dependencies/g2o-20200410/g2o/stuff/os_specific.h
+stdio.h
+-
+stdlib.h
+-
+stdarg.h
+-
+sys/time.h
+-
+sys/time.h
+-
+

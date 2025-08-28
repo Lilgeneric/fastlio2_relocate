@@ -1,0 +1,51 @@
+<launch>
+    <!-- 1. 声明算法选择参数（0=fastlio_localization  1=fastlio2） -->
+    <arg name="algorithm" default="1" />
+    <param name="/use_sim_time" value="true" />
+
+    <!-- 机器人仿真模型及gazebo -->
+    <include file="$(find car_model)/launch/car_gazebo.launch">
+        <arg name="car_model_rviz" value="false" />
+    </include>
+
+    <!-- 路径规划算法 -->
+    <include file = "$(find route_planning)/launch/move_base.launch"/>
+
+    <!-- pointcloud_to_laserscan -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" output="screen">
+        <!-- 输入输出话题重映射 -->
+        <remap from="cloud_in" to="/cloud_registered"/>
+        <remap from="scan" to="/scan"/>
+        <!-- 核心参数配置 -->
+        <rosparam command="load">
+            target_frame: laser_front_link
+            min_height: -0.4
+            max_height: 1.0
+            angle_min: -3.1415926
+            angle_max: 3.1415926
+            scan_time: 0.1
+        </rosparam>
+    </node>
+
+    <!-- 全局地图发布 -->
+    <include file = "$(find nav)/launch/map_server.launch"/>
+
+    <!-- 选项1：fast_lio2定位算法 -->
+    <include if="$(arg algorithm)" file = "$(find fast_lio)/launch/mapping_velodyne.launch">
+        <arg name="pcd_save_en" value="false"/>
+        <arg name="odom_topic" value="/odom" />
+    </include>
+
+    <!-- 选项0：fast_lio_localization定位算法 -->
+    <include unless="$(arg algorithm)" file="$(find fast_lio_localization)/launch/localization_velodyne.launch">
+        <arg name="map" value="$(find fast_lio_localization)/PCD/zsq_downsampled.pcd"/>
+        <arg name="odom_topic" value="/odom" />
+    </include>
+
+    <!-- tf发布，保证tf树只有唯一根节点 -->
+    <node name="map2odom" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 /map /odom"/>
+    <!-- <node name="initialpose2tf" pkg="nav" type="initialpose2tf" /> -->
+
+    <!-- 加载RVIZ及配置文件 -->
+    <node pkg="rviz" type="rviz" name="nav_rviz" args="-d $(find nav)/rviz_cfg/nav.rviz" />
+</launch>

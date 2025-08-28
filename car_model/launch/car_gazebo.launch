@@ -1,0 +1,31 @@
+<launch>
+    <arg name="car_model_rviz" default="true" />
+    <param name="use_sim_time" value="true"/>
+
+    
+    <!-- 包含小车模型launch -->
+    <include file="$(find car_model)/launch/car.launch">
+        <arg name="car_model_rviz" value="$(arg car_model_rviz)" />
+    </include>
+
+    <!-- 启动gazebo服务器和客户端 -->
+    <!-- <node name="gazebo" pkg="gazebo_ros" type="gzserver" respawn="false" output="screen" 
+            args="-e ode $(find car_model)/world/zsq.world">
+        <remap from="tf" to="gazebo_tf"/>
+        <remap from="odom" to="gazebo_odom"/>
+    </node>
+    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen">
+        <remap from="tf" to="gazebo_tf"/>
+        <remap from="odom" to="gazebo_odom"/>
+    </node> -->
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find car_model)/world/zsq.world"/>
+    </include>
+
+    <node pkg="car_model" type="set_gazebo_log_level.sh" name="set_gazebo_log" output="screen" />
+
+    <!-- 在gazebo中显示机器人模型 -->
+    <node pkg="gazebo_ros" type="spawn_model" name="model" 
+          args="-urdf -model mycar -param robot_description"  />
+</launch>

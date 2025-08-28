@@ -1,0 +1,32 @@
+<robot name="my_sensors" xmlns:xacro="http://wiki.ros.org/xacro">
+     <gazebo reference="imu">
+        <gravity>true</gravity>
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>200</update_rate>
+            <visualize>true</visualize>
+            <topic>/imu/data</topic>
+            <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                <topicName>/imu/data</topicName>         
+                <bodyName>imu</bodyName>
+                <updateRateHZ>200.0</updateRateHZ>    
+                <gaussianNoise>0.0</gaussianNoise>
+                <!-- <gaussianNoise>0.00329</gaussianNoise> -->
+                <xyzOffset>0 0 0</xyzOffset>     
+                <rpyOffset>0 0 0</rpyOffset>
+                <frameName>imu</frameName>        
+            </plugin>
+            <pose>0 0 0 0 0 0</pose>
+        </sensor>
+        <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50.0</updateRate>
+            <bodyName>imu</bodyName>
+            <topicName>/imu_pose</topicName>
+            <gaussianNoise>0.0</gaussianNoise>
+            <frameName>map</frameName>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
+        </plugin>
+    </gazebo>
+</robot>

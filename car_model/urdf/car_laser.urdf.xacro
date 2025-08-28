@@ -1,0 +1,179 @@
+<robot name="my_laser" xmlns:xacro="http://wiki.ros.org/xacro">
+ 
+    <!-- 常量定义 -->
+    <xacro:property name="M_PI"          value="3.1415926535897931" />
+
+    <!-- 支架参数 -->
+    <xacro:property name="support_length" value="0.06" />
+    <xacro:property name="support_radius" value="0.03" />
+    <xacro:property name="support_x"     value="0.0" />
+    <xacro:property name="support_y"     value="0.0" />
+    <xacro:property name="support_z"     value="${base_link_length / 2 + support_length / 2}" />
+    <xacro:property name="support_m"     value="0.02" />
+    <xacro:property name="laser_length" value="0.05" /> 
+    <xacro:property name="laser_radius" value="0.03" /> 
+    <xacro:property name="laser_x" value="0.0" /> 
+    <xacro:property name="laser_y" value="0.0" /> 
+    <xacro:property name="laser_z" value="${support_length / 2}" /> 
+    <xacro:property name="laser_m" value="1.0" /> 
+
+    <!-- Velodyne VLP-16 激光雷达宏定义 -->
+    <xacro:property name="parent" value="lidar_base"/>
+    <xacro:property name="name" value="velodyne"/>
+    <xacro:property name="topic" value="/velodyne_points"/>
+    <xacro:property name="hz" value="10"/>
+    <xacro:property name="lasers" value="16"/>
+    <xacro:property name="samples" value="1875"/>
+    <xacro:property name="collision_range" value="0.3"/>
+    <xacro:property name="min_range" value="0.9"/>
+    <xacro:property name="max_range" value="130.0"/>
+    <xacro:property name="noise" value="0.008"/>
+    <xacro:property name="min_angle" value="-${M_PI}"/>
+    <xacro:property name="max_angle" value="${M_PI}"/>
+    <xacro:property name="gpu" value="true"/>
+
+    <!-- 辅助测试杆（测试能否穿洞）宏定义 -->
+    <xacro:property name="testRod_radius" value="0.02"/>
+    <xacro:property name="testRod_length" value="0.1"/>
+    <xacro:property name="testRod_m" value="0.1"/>
+
+    <link name="support">
+        <visual>
+            <geometry>
+                <cylinder radius="${support_radius}" length="${support_length}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <material name="red">
+                <color rgba="0.8 0.2 0.0 0.8" />
+            </material>
+        </visual>
+
+        <collision>
+            <geometry>
+                <cylinder radius="${support_radius}" length="${support_length}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        </collision>
+
+        <xacro:cylinder_inertial_matrix m="${support_m}" r="${support_radius}" h="${support_length}" />
+
+    </link>
+
+    <joint name="support2base_link" type="fixed">
+        <parent link="base_link" />
+        <child link="support" />
+        <origin xyz="${support_x} ${support_y} ${support_z}" />
+    </joint>
+
+    <gazebo reference="support">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <joint name="laser2support" type="fixed">
+        <parent link="support" />
+        <child link="${name}_base_link" />
+        <origin xyz="${laser_x} ${laser_y} ${laser_z}" />
+    </joint>
+    <gazebo reference="${name}">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+        <link name="testRod">
+        <visual>
+            <geometry>
+                <cylinder radius="${testRod_radius}" length="${testRod_length}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <material name="red">
+                <color rgba="0.8 0.2 0.0 0.8" />
+            </material>
+        </visual>
+
+        <collision>
+            <geometry>
+                <cylinder radius="${testRod_radius}" length="${testRod_length}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        </collision>
+
+        <xacro:cylinder_inertial_matrix m="${testRod_m}" r="${testRod_radius}" h="${testRod_length}" />
+
+    </link>
+
+    <joint name="testRod2base_link" type="fixed">
+        <parent link="base_link" />
+        <child link="testRod" />
+        <origin xyz="0 0 ${base_link_length / 2 + support_length + testRod_length / 2}" />
+    </joint>
+
+    <gazebo reference="testRod">
+        <material>Gazebo/Red</material>
+    </gazebo>
+ 
+    <link name="${name}_base_link">
+      <inertial>
+        <mass value="0.83"/>
+        <origin xyz="0 0 0.03585"/>
+        <inertia ixx="${(0.83 * (3.0*0.0516*0.0516 + 0.0717*0.0717)) / 12.0}" ixy="0" ixz="0"
+          iyy="${(0.83 * (3.0*0.0516*0.0516 + 0.0717*0.0717)) / 12.0}" iyz="0"
+          izz="${0.5 * 0.83 * (0.0516*0.0516)}"/>
+      </inertial>
+      <visual>
+        <geometry>
+            <mesh filename="package://velodyne_description/meshes/VLP16_base_1.dae"/>
+        </geometry>
+      </visual>
+      <visual>
+        <geometry>
+            <mesh filename="package://velodyne_description/meshes/VLP16_scan.dae"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0.03585"/>
+        <geometry>
+          <cylinder radius="0.0516" length="0.0717"/>
+        </geometry>
+      </collision>
+    </link>
+ 
+    <joint name="${name}_base_scan_joint" type="fixed" >
+      <origin xyz="0 0 0.0377" rpy="0 0 0" />
+      <parent link="${name}_base_link" />
+      <child link="${name}"/>
+    </joint>
+ 
+    <link name="${name}">
+      <inertial>
+        <mass value="0.01"/>
+        <origin xyz="0 0 0"/>
+        <inertia ixx="1e-7" ixy="0" ixz="0" iyy="1e-7" iyz="0" izz="1e-7"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 -0.0377" />
+        <geometry>
+            <mesh filename="package://velodyne_description/meshes/VLP16_scan.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <!-- <link name="mid-360">   
+        <inertial>
+            <mass value="0.3"/> 
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="0.00045" ixy="0" ixz="0" 
+                    iyy="0.00045" iyz="0" 
+                    izz="0.00023"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 -0.038" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://livox_laser_simulation/meshes/livox_mid-360-90x.dae"/>
+            </geometry>
+            <material name="GrayLivox">
+                <color rgba="0.5 0.5 0.5 1.0"/> 
+            </material>
+        </visual>
+    </link>  -->
+</robot>
+

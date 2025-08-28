@@ -1,0 +1,68 @@
+<robot name="my_camera" xmlns:xacro="http://wiki.ros.org/xacro">
+
+    <xacro:property name="camera_length" value="0.02" /> 
+    <xacro:property name="camera_width" value="0.025" /> 
+    <xacro:property name="camera_height" value="0.025" /> 
+    <xacro:property name="camera_x" value="0.18" /> 
+    <xacro:property name="camera_y" value="0.0" /> 
+    <xacro:property name="camera_z" value="${base_link_length / 2 + camera_height / 2}" /> 
+
+    <xacro:property name="camera_m" value="0.01" /> 
+
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="${camera_length} ${camera_width} ${camera_height}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <material name="blue">
+                <color rgba="0 0.2 0.8 0.8" />
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${camera_length} ${camera_width} ${camera_height}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        </collision>
+        <xacro:Box_inertial_matrix m="${camera_m}" l="${camera_length}" w="${camera_width}" h="${camera_height}" />
+    </link>
+
+    <joint name="camera2base_link" type="fixed">
+        <parent link="base_link" />
+        <child link="camera_link" />
+        <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="0 0 0"/>
+    </joint>
+    <gazebo reference="camera">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+    <link name="depth_camera">
+        <visual>
+            <geometry>
+                <box size="${camera_length} ${camera_width} ${camera_height}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <material name="blue">
+                <color rgba="0 0.2 0.8 0.8" />
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${camera_length} ${camera_width} ${camera_height}" />
+            </geometry>
+            <origin xyz="0.0 0.0 0.0" rpy=" 0.0 0.0 0.0" />
+        </collision>
+        <xacro:Box_inertial_matrix m="${camera_m}" l="${camera_length}" w="${camera_width}" h="${camera_height}" />
+    </link>
+
+    <joint name="camera_dep2base_link" type="fixed">
+        <parent link="base_link" />
+        <child link="depth_camera" />
+        <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="0 1.0472 0"/>
+    </joint>
+    <gazebo reference="depth_camera">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+</robot>
+

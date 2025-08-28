@@ -1,0 +1,16 @@
+<launch>
+    <node name="orb_slam3_rbgd" pkg="orb_slam3_ros" type="orb_slam3_ros_rgbd" output="screen">
+        <!-- for TUM dataset -->
+        <remap from="/camera/rgb/image_raw"                 to="/camera/color/image_raw"/>
+        <remap from="/camera/depth_registered/image_raw"    to="/camera/aligned_depth_to_color/image_raw"/>
+
+        <!-- Parameters for original ORB-SLAM3 -->
+        <param name="voc_file"      type="string"   value="$(find orb_slam3_ros)/ORB_SLAM3/Vocabulary/ORBvoc.txt" />
+        <param name="settings_file" type="string"   value="$(find orb_slam3_ros)/config/RealSense_D455.yaml" />
+
+        <!-- Parameters for ROS -->
+        <param name="world_frame_id"    type="string"   value="map" />
+        <param name="cam_frame_id"      type="string"   value="camera_color_optical_frame" />
+        <param name="enable_pangolin" type="bool" value="true"/>
+    </node>
+</launch>
