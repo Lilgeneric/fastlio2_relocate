@@ -8,12 +8,12 @@
 
 ### 效果演示
 - **仿真测试**  
-<div align="center"><img src="doc/simulation.png" alt="simulation" width="1000" /></div>
+<div align="center"><img src="doc/simulation.png" alt="simulation" width=90% /></div>
 <div align="center">simulation</div>
 <br>
 
 - **实车验证**  
-<div align="center"><img src="doc/Real_world_video.gif" width="1000" /></div>
+<div align="center"><img src="doc/Real_world_video.gif" width=80% /></div>
 <div align="center">Real world video（看不清可以看doc/Real_world_video.mp4）</div>
 <br>
 
@@ -181,7 +181,7 @@ sudo apt-get install -y ros-[版本号]-rtabmap ros-[版本号]-rtabmap-ros
 - RTAB-Map参数详解：[RTAB-Map ROS参数配置指南](https://blog.csdn.net/m0_62979274/article/details/150866519?spm=1001.2014.3001.5502)
 
 ### 2.3 效果演示
-<div align="center"><img src="doc/RTAB-Map_simulation.gif" width="1000" /></div>
+<div align="center"><img src="doc/RTAB-Map_simulation.gif" width=80% /></div>
 <div align="center">RTAB-Map simulation（看不清可以看doc/RTAB-Map_simulation.mp4）</div>
 <br>
 
@@ -205,7 +205,7 @@ sudo apt-get install -y ros-[版本号]-rtabmap ros-[版本号]-rtabmap-ros
    ```
 3. **验证结果**：重定位精度满足基础需求，位姿跟踪稳定（如下图所示）。
 
-<div align="center"><img src="doc/orb-slam3-ros.png" alt="orb-slam3-ros" width="1000" /></div>
+<div align="center"><img src="doc/orb-slam3-ros.png" alt="orb-slam3-ros" width=90% /></div>
 <div align="center">orb-slam3-ros</div>
 <br>
 

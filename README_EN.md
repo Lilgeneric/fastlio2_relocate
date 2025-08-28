@@ -8,12 +8,12 @@ This project focuses on **robot autonomous positioning and navigation through Li
 
 ### Effect Demonstration
 - **Simulation Test**  
-<div align="center"><img src="doc/simulation.png" alt="simulation" width="1000" /></div>
+<div align="center"><img src="doc/simulation.png" alt="simulation" width=90% /></div>
 <div align="center">simulation</div>
 <br>
 
 - **Real Vehicle Verification**  
-<div align="center"><img src="doc/Real_world_video.gif" width="1000" /></div>
+<div align="center"><img src="doc/Real_world_video.gif" width=80% /></div>
 <div align="center">Real world video(or Real_world_video.mp4)</div>
 <br>
 
@@ -181,7 +181,7 @@ sudo apt-get install -y ros-[version]-rtabmap ros-[version]-rtabmap-ros
 - Detailed explanation of RTAB-Map parameters: [RTAB-Map ROS Parameter Configuration Guide](https://blog.csdn.net/m0_62979274/article/details/150866519?spm=1001.2014.3001.5502)
 
 ### 2.3 Effect Demonstration
-<div align="center"><img src="doc/RTAB-Map_simulation.gif" width="1000" /></div>
+<div align="center"><img src="doc/RTAB-Map_simulation.gif" width=80% /></div>
 <div align="center">RTAB-Map simulation(or RTAB-Map_simulation.mp4)</div>
 <br>
 
@@ -205,7 +205,7 @@ sudo apt-get install -y ros-[version]-rtabmap ros-[version]-rtabmap-ros
    ```
 3. **Verification Result**: The relocalization accuracy meets basic needs, and the pose tracking is stable (as shown in the figure below).
 
-<div align="center"><img src="doc/orb-slam3-ros.png" alt="orb-slam3-ros" width="1000" /></div>
+<div align="center"><img src="doc/orb-slam3-ros.png" alt="orb-slam3-ros" width=90% /></div>
 <div align="center">orb-slam3-ros</div>
 <br>
 
