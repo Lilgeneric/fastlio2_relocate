@@ -1,0 +1,8 @@
+<launch>
+    <node name="omniwheel" pkg = "omniwheel" type="lidarTransform" output="screen">
+        <param name="laser_input" value="/livox/lidar" />  <!-- 输入话题重定向 -->
+        <param name="laser_output" value="/livox_lidar" />
+        <param name="target_frame" value="laser_front_virtual_link" />
+        <param name="source_frame" value="laser_front_link" />
+    </node>
+</launch>
