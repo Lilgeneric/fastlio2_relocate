@@ -1,0 +1,55 @@
+<launch>
+    <!--robot bast type use different tf value-->
+    <arg name="base_type"       default="$(env BASE_TYPE)" />
+    <!-- robot frame -->
+    <arg name="base_frame"       default="base_footprint" />    
+    <arg name="camera_type"       default="$(env CAMERA_TYPE)" />   
+    <arg name="camera_frame" default="camera_link"/>  
+
+    <include file="$(find robot_vslam)/launch/camera/$(arg camera_type).launch"/>
+
+    <group if="$(eval camera_type == 'astrapro')">
+        <group if="$(eval base_type == 'MarsRobot')">
+            <!-- 深度相机相比与底盘中心，靠前9cm，高28cm -->
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera"
+                args="0.09 0.0 0.28 0.0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+                <!-- args="x y z yaw pitch roll frame_id child_frame_id period_in_ms"-->
+            </node>
+        </group>
+        <group if="$(eval base_type == '4WD')">
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera" 
+                args="0.115 0.0 0.25 0.0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+            </node>
+        </group>
+        <group if="$(eval base_type == '4WD_OMNI')">
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera"
+                args="0.115 0.0 0.25 0.0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+            </node>
+        </group>
+        <group if="$(eval base_type == 'NanoRobot_Pro')">
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera"
+                args="0.0015 0.0 0.140 0.0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+            </node>
+        </group>
+        <group if="$(eval base_type == 'NanoCar_Pro')">
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera"
+                args="0.140 0.0 0.093 0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+            </node>
+        </group>
+        <group if="$(eval base_type == 'NanoCar_SE')">
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera"
+                args="0.140 0.0 0.093 0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+            </node>
+        </group>
+        <group if="$(eval base_type == 'Race182')">
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera"
+                args="0.180 0.0 0.168 0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+            </node>
+        </group>   
+        <group if="$(eval base_type == 'NanoOmni')">
+            <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera"
+                args="0.100 0.0 0.168 0 0.0 0.0 $(arg base_frame) $(arg camera_frame) 20">
+            </node>
+        </group>               
+    </group>
+</launch>
